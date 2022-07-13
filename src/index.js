@@ -1,3 +1,28 @@
-module.exports = function check(str, bracketsConfig) {
-  // your solution
+module.exports = function check(str, brackets = []) {
+  // Переменная количества оставшиъся скобок в строке
+  let countSkobok = str.length;
+
+  const regExp = new RegExp(brackets.reduce((acc, val, index) => {
+    if (+str) {
+      acc += `${val.join('')}|`;
+      return acc;
+    }
+    acc += `\\${val.join('\\')}|`;
+    return acc;
+  }, ''), 'g');
+
+  // Идем циклом пока не останется непарныъ скобок или пусто строки
+  for (let i = 0; i < 100; i++) {
+    // Берем строку и удаляем из нее парные скобочки согласно паттерну в regExp, по паре за один цикл
+    str = str.replace(regExp, '');
+    // Проверяем если после удаления кол-во симоволов в строке равно тому же что и в предыдущий проход по циклу,
+    // в таком случае значит что есть непарная скобка и мы сразу выходим из цикла
+    if (countSkobok === str.length) return false;
+    // Тут проставляем кол-во символов которое осталось в строке после того как мы удалили пару скобок
+    countSkobok = str.length;
+    // Если скобок не осталось, следовательно все парные скобки уже удалены и строка пустая
+    if (!str) return true;
+  }
+  // если строка все же осталась не пустой, значит есть непарные скобки
+  return false;
 }
